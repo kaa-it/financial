@@ -13,7 +13,7 @@ use std::fmt::Display;
 use std::str::FromStr;
 
 /// The `TransactionStatus` enum represents the status of a financial transaction.
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Copy, Clone)]
 pub enum TransactionStatus {
     /// A successful transaction.
     Success,
@@ -53,7 +53,7 @@ impl Display for TransactionStatus {
 }
 
 impl TransactionStatus {
-    fn from_repr(value: usize) -> Option<TransactionStatus> {
+    pub fn from_repr(value: usize) -> Option<TransactionStatus> {
         match value {
             0 => Some(TransactionStatus::Success),
             1 => Some(TransactionStatus::Failure),

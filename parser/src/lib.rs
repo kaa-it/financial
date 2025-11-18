@@ -5,10 +5,12 @@ mod csv_parser;
 mod error;
 mod transaction;
 mod txt_parser;
+mod bin_parser;
 
 use crate::transaction::Transaction;
 pub use csv_parser::CsvParserFactory;
 pub use txt_parser::TxtParserFactory;
+pub use bin_parser::BinParserFactory;
 
 /// The `ParserFactory` trait represents a factory for creating parsers.
 pub trait ParserFactory {

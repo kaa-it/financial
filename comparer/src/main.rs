@@ -1,12 +1,13 @@
 use clap::Parser;
 use comparer::compare;
-use parser::{CsvParserFactory, TxtParserFactory};
+use parser::{BinParserFactory, CsvParserFactory, TxtParserFactory};
 use serde::Serialize;
 
 #[derive(clap::ValueEnum, Clone, Debug, Serialize)]
 enum Format {
     Csv,
     Txt,
+    Bin,
 }
 
 #[derive(clap::Parser, Debug)]
@@ -36,6 +37,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         (Format::Txt, Format::Txt) => {
             compare(args.file1, args.file2, TxtParserFactory, TxtParserFactory)
+        }
+        (Format::Bin, Format::Csv) => {
+            compare(args.file1, args.file2, BinParserFactory, CsvParserFactory)
+        }
+        (Format::Bin, Format::Txt) => {
+            compare(args.file1, args.file2, BinParserFactory, TxtParserFactory)
+        }
+        (Format::Bin, Format::Bin) => {
+            compare(args.file1, args.file2, BinParserFactory, BinParserFactory)
+        }
+        (Format::Csv, Format::Bin) => {
+            compare(args.file1, args.file2, CsvParserFactory, BinParserFactory)
+        }
+        (Format::Txt, Format::Bin) => {
+            compare(args.file1, args.file2, TxtParserFactory, BinParserFactory)
         }
     }?;
 

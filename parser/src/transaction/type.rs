@@ -14,7 +14,7 @@ use std::fmt::Display;
 use std::str::FromStr;
 
 /// The `TransactionType` enum represents the type of financial transaction.
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Copy, Clone)]
 pub enum TransactionType {
     /// A transaction involving adding funds.
     Deposit,
@@ -54,7 +54,7 @@ impl Display for TransactionType {
 }
 
 impl TransactionType {
-    fn from_repr(value: usize) -> Option<TransactionType> {
+    pub fn from_repr(value: usize) -> Option<TransactionType> {
         match value {
             0 => Some(TransactionType::Deposit),
             1 => Some(TransactionType::Withdrawal),

@@ -26,6 +26,8 @@ pub enum ParserError {
     InvalidCsvFormat(String),
     /// An invalid TXT format was encountered.
     InvalidTxtFormat(String),
+    /// An invalid BIN format was encountered.
+    InvalidBinFormat(String),
 }
 
 impl Display for ParserError {
@@ -48,6 +50,9 @@ impl Display for ParserError {
             }
             ParserError::InvalidTxtFormat(line) => {
                 write!(f, "Invalid TXT format: {}", line)
+            }
+            ParserError::InvalidBinFormat(line) => {
+                write!(f, "Invalid BIN format: {}", line)
             }
         }
     }
