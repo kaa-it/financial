@@ -1,7 +1,6 @@
 use crate::error::ParserError;
-use crate::transaction_status::TransactionStatus;
-use crate::transaction_type::TransactionType;
-use crate::{Parser, ParserFactory, Transaction};
+use crate::transaction::{Transaction, TransactionStatus, TransactionType};
+use crate::{Parser, ParserFactory};
 use std::io::{BufRead, BufReader, BufWriter, Read, Write};
 
 const CSV_HEADER: &str =
@@ -121,14 +120,13 @@ impl CsvParser {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
-    use std::env;
     use std::fs::{File, OpenOptions};
 
     #[test]
     fn it_works() {
-        println!("{}", env::current_dir().unwrap().display());
         let mut file = File::open("../samples/records_example.csv").unwrap();
         let res = CsvParser.read_from(&mut file);
         assert!(res.is_ok());

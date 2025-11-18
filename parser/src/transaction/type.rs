@@ -2,6 +2,7 @@ use crate::error::ParserError;
 use std::fmt::Display;
 use std::str::FromStr;
 
+#[derive(PartialEq, Eq)]
 pub enum TransactionType {
     Deposit,
     Transfer,

@@ -8,6 +8,7 @@ pub enum ParserError {
     IoError(std::io::Error),
     InvalidCsvHeader(String),
     InvalidCsvFormat(String),
+    InvalidTxtFormat(String),
 }
 
 impl Display for ParserError {
@@ -27,6 +28,9 @@ impl Display for ParserError {
             }
             ParserError::InvalidCsvFormat(line) => {
                 write!(f, "Invalid CSV format: {}", line)
+            }
+            ParserError::InvalidTxtFormat(line) => {
+                write!(f, "Invalid TXT format: {}", line)
             }
         }
     }
