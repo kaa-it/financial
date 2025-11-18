@@ -41,7 +41,7 @@ Each transaction includes:
 ## Usage
 
 ```bash
- converter --input <INPUT> --output <OUTPUT> --input-format <INPUT_FORMAT> --output-format <OUTPUT_FORMAT>
+converter --input <INPUT> --output <OUTPUT> --input-format <INPUT_FORMAT> --output-format <OUTPUT_FORMAT>
 ```
 
 ```bash
