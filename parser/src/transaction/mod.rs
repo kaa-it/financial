@@ -1,3 +1,15 @@
+//! The `Transaction` struct represents a financial transaction.
+//!
+//! Fields:
+//! - `tx_id`: The ID of the transaction.
+//! - `tx_type`: The type of the transaction.
+//! - `from_user_id`: The ID of the user who is sending the transaction.
+//! - `to_user_id`: The ID of the user who is receiving the transaction.
+//! - `amount`: The amount of the transaction.
+//! - `timestamp`: The timestamp of the transaction.
+//! - `status`: The status of the transaction.
+//! - `description`: The description of the transaction.
+
 mod status;
 mod r#type;
 
@@ -5,15 +17,24 @@ pub use status::TransactionStatus;
 use std::fmt::{Display, Formatter};
 pub use r#type::TransactionType;
 
+/// The `Transaction` struct represents a financial transaction.
 #[derive(PartialEq, Eq)]
 pub struct Transaction {
+    /// The ID of the transaction.
     pub tx_id: u64,
+    /// The type of the transaction.
     pub tx_type: TransactionType,
+    /// The ID of the user who is sending the transaction.
     pub from_user_id: u64,
+    /// The ID of the user who is receiving the transaction.
     pub to_user_id: u64,
+    /// The amount of the transaction.
     pub amount: u64,
+    /// The timestamp of the transaction.
     pub timestamp: u64,
+    /// The status of the transaction.
     pub status: TransactionStatus,
+    /// The description of the transaction.
     pub description: String,
 }
 

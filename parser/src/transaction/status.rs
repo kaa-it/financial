@@ -1,11 +1,25 @@
+//! The `TransactionStatus` enum represents the status of a financial transaction.
+//!
+//! Variants:
+//! - `Success`: A successful transaction.
+//! - `Failure`: A failed transaction.
+//! - `Pending`: A pending transaction.
+//!
+//! This enum provides functionality to parse transaction statuses from strings,
+//! convert them to/from string representations, and define integer-based
+//! representations.
 use crate::error::ParserError;
 use std::fmt::Display;
 use std::str::FromStr;
 
+/// The `TransactionStatus` enum represents the status of a financial transaction.
 #[derive(PartialEq, Eq)]
 pub enum TransactionStatus {
+    /// A successful transaction.
     Success,
+    /// A failed transaction.
     Failure,
+    /// A pending transaction.
     Pending,
 }
 

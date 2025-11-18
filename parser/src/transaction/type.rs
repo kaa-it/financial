@@ -1,12 +1,27 @@
+//! The `TransactionType` enum represents the type of financial transaction.
+//!
+//! Variants:
+//! - `Deposit`: A transaction involving adding funds.
+//! - `Withdrawal`: A transaction involving removing funds.
+//! - `Transfer`: A transaction involving transferring funds between accounts.
+//!
+//! This enum provides functionality to parse transaction types from strings,
+//! convert them to/from string representations, and define integer-based
+//! representations.
+
 use crate::error::ParserError;
 use std::fmt::Display;
 use std::str::FromStr;
 
+/// The `TransactionType` enum represents the type of financial transaction.
 #[derive(PartialEq, Eq)]
 pub enum TransactionType {
+    /// A transaction involving adding funds.
     Deposit,
-    Transfer,
+    /// A transaction involving removing funds.
     Withdrawal,
+    /// A transaction involving transferring funds between accounts.
+    Transfer,
 }
 
 impl FromStr for TransactionType {

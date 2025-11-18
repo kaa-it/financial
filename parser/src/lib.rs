@@ -1,3 +1,5 @@
+//! The `parser` crate provides functionality to parse financial transactions from CSV and TXT files.
+
 use crate::error::ParserError;
 mod csv_parser;
 mod error;
@@ -8,21 +10,24 @@ use crate::transaction::Transaction;
 pub use csv_parser::CsvParserFactory;
 pub use txt_parser::TxtParserFactory;
 
+/// The `ParserFactory` trait represents a factory for creating parsers.
 pub trait ParserFactory {
+    /// The type of the parser.
     type Parser: Parser;
     fn create_parser(&self) -> Self::Parser;
 }
 
+/// The `Parser` trait represents a parser for financial transactions.
 pub trait Parser {
-    // Парсит из любого источника, реализующего трейт Read
+    /// Reads transactions from a reader.
     fn read_from<R: std::io::Read>(&self, r: &mut R) -> Result<Vec<Transaction>, ParserError>
     where
         Self: Sized;
 
-    // Записывает отчёт в любой приёмник, реализующий трейт Write
+    /// Writes transactions to a writer.
     fn write_to<W: std::io::Write>(
         &self,
         writer: &mut W,
-        transactions: &Vec<Transaction>,
+        transactions: &[Transaction],
     ) -> Result<(), ParserError>;
 }

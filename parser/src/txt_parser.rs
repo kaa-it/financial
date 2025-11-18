@@ -1,8 +1,11 @@
+//! The `txt_parser` module provides functionality to parse financial transactions from TXT files.
+
 use crate::error::ParserError;
 use crate::transaction::{Transaction, TransactionStatus, TransactionType};
 use crate::{Parser, ParserFactory};
 use std::io::{BufRead, BufReader, BufWriter, Read, Write};
 
+/// The `TxtParserFactory` struct is a factory for creating TXT parsers.
 pub struct TxtParserFactory;
 
 impl ParserFactory for TxtParserFactory {
@@ -13,6 +16,7 @@ impl ParserFactory for TxtParserFactory {
     }
 }
 
+/// The `TxtParser` struct is a parser for TXT files.
 pub struct TxtParser;
 
 impl Parser for TxtParser {
@@ -47,7 +51,7 @@ impl Parser for TxtParser {
     fn write_to<W: Write>(
         &self,
         writer: &mut W,
-        transactions: &Vec<Transaction>,
+        transactions: &[Transaction],
     ) -> Result<(), ParserError> {
         let mut buf_writer = BufWriter::new(writer);
         let mut current = 1;

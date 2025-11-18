@@ -1,3 +1,5 @@
+//! The `csv_parser` module provides functionality to parse financial transactions from CSV files.
+
 use crate::error::ParserError;
 use crate::transaction::{Transaction, TransactionStatus, TransactionType};
 use crate::{Parser, ParserFactory};
@@ -6,6 +8,8 @@ use std::io::{BufRead, BufReader, BufWriter, Read, Write};
 const CSV_HEADER: &str =
     "TX_ID,TX_TYPE,FROM_USER_ID,TO_USER_ID,AMOUNT,TIMESTAMP,STATUS,DESCRIPTION";
 
+
+/// The `CsvParserFactory` struct is a factory for creating CSV parsers.
 pub struct CsvParserFactory;
 
 impl ParserFactory for CsvParserFactory {
@@ -16,6 +20,7 @@ impl ParserFactory for CsvParserFactory {
     }
 }
 
+/// The `CsvParser` struct is a parser for CSV files.
 pub struct CsvParser;
 
 impl Parser for CsvParser {
@@ -47,7 +52,7 @@ impl Parser for CsvParser {
     fn write_to<W: Write>(
         &self,
         writer: &mut W,
-        transactions: &Vec<Transaction>,
+        transactions: &[Transaction],
     ) -> Result<(), ParserError> {
         let mut buf_writer = BufWriter::new(writer);
         let header = format!("{}\n", CSV_HEADER);
