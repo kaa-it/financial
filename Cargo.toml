@@ -1,0 +1,3 @@
+[workspace]
+members = ["comparer", "parser", "converter"]
+resolver = "3"
