@@ -1,19 +1,17 @@
 use parser::{Parser, ParserFactory};
+use std::io::Read;
 
-pub fn compare(
-    file1: String,
-    file2: String,
+pub fn compare<R1: Read, R2: Read>(
+    mut source1: R1,
+    mut source2: R2,
     parser_factory1: impl ParserFactory,
     parser_factory2: impl ParserFactory,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let mut file1 = std::fs::File::open(file1)?;
-    let mut file2 = std::fs::File::open(file2)?;
-
     let parser1 = parser_factory1.create_parser();
     let parser2 = parser_factory2.create_parser();
 
-    let transactions1 = parser1.read_from(&mut file1)?;
-    let transactions2 = parser2.read_from(&mut file2)?;
+    let transactions1 = parser1.read_from(&mut source1)?;
+    let transactions2 = parser2.read_from(&mut source2)?;
 
     if transactions1.len() != transactions2.len() {
         println!("Files have different number of transactions");
