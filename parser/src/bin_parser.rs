@@ -93,6 +93,10 @@ impl BinParser {
             return Err(InvalidBinFormat("Wrong description length".to_string()));
         }
 
+        if description_length > 10 * 1024 * 1024 {
+            return Err(InvalidBinFormat("Description is too long".to_string()));
+        }
+
         let mut description = vec![0x00; description_length as usize];
         r.read_exact(&mut description)?;
         let description = String::from_utf8(description)
