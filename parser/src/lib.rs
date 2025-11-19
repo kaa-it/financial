@@ -1,5 +1,6 @@
 //! The `parser` crate provides functionality to parse financial transactions from CSV and TXT files.
 #![deny(unreachable_pub)]
+#![warn(missing_docs)]
 
 use crate::error::ParserError;
 mod bin_parser;
@@ -17,6 +18,8 @@ pub use txt_parser::TxtParserFactory;
 pub trait ParserFactory {
     /// The type of the parser.
     type Parser: Parser;
+
+    /// Creates a new parser.
     fn create_parser(&self) -> Self::Parser;
 }
 
