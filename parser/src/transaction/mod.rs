@@ -13,8 +13,8 @@
 mod status;
 mod r#type;
 
-pub use r#type::TransactionType;
-pub use status::TransactionStatus;
+pub(crate) use r#type::TransactionType;
+pub(crate) use status::TransactionStatus;
 use std::fmt::{Display, Formatter};
 
 /// The `Transaction` struct represents a financial transaction.
