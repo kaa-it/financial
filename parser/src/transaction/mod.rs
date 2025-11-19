@@ -13,28 +13,36 @@
 mod status;
 mod r#type;
 
+pub use r#type::TransactionType;
 pub use status::TransactionStatus;
 use std::fmt::{Display, Formatter};
-pub use r#type::TransactionType;
 
 /// The `Transaction` struct represents a financial transaction.
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, serde::Serialize, serde::Deserialize, Debug)]
 pub struct Transaction {
     /// The ID of the transaction.
+    #[serde(rename = "TX_ID")]
     pub tx_id: u64,
     /// The type of the transaction.
+    #[serde(rename = "TX_TYPE")]
     pub tx_type: TransactionType,
     /// The ID of the user who is sending the transaction.
+    #[serde(rename = "FROM_USER_ID")]
     pub from_user_id: u64,
     /// The ID of the user who is receiving the transaction.
+    #[serde(rename = "TO_USER_ID")]
     pub to_user_id: u64,
     /// The amount of the transaction.
+    #[serde(rename = "AMOUNT")]
     pub amount: u64,
     /// The timestamp of the transaction.
+    #[serde(rename = "TIMESTAMP")]
     pub timestamp: u64,
     /// The status of the transaction.
+    #[serde(rename = "STATUS")]
     pub status: TransactionStatus,
     /// The description of the transaction.
+    #[serde(rename = "DESCRIPTION")]
     pub description: String,
 }
 

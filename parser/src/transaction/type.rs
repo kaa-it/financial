@@ -14,13 +14,16 @@ use std::fmt::Display;
 use std::str::FromStr;
 
 /// The `TransactionType` enum represents the type of financial transaction.
-#[derive(PartialEq, Eq, Copy, Clone)]
+#[derive(PartialEq, Eq, Copy, Clone, serde::Serialize, serde::Deserialize, Debug)]
 pub enum TransactionType {
     /// A transaction involving adding funds.
+    #[serde(rename = "DEPOSIT")]
     Deposit,
     /// A transaction involving removing funds.
+    #[serde(rename = "WITHDRAWAL")]
     Withdrawal,
     /// A transaction involving transferring funds between accounts.
+    #[serde(rename = "TRANSFER")]
     Transfer,
 }
 

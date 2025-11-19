@@ -1,13 +1,9 @@
 //! The `csv_parser` module provides functionality to parse financial transactions from CSV files.
 
 use crate::error::ParserError;
-use crate::transaction::{Transaction, TransactionStatus, TransactionType};
+use crate::transaction::Transaction;
 use crate::{Parser, ParserFactory};
-use std::io::{BufRead, BufReader, BufWriter, Read, Write};
-
-const CSV_HEADER: &str =
-    "TX_ID,TX_TYPE,FROM_USER_ID,TO_USER_ID,AMOUNT,TIMESTAMP,STATUS,DESCRIPTION";
-
+use std::io::{Read, Write};
 
 /// The `CsvParserFactory` struct is a factory for creating CSV parsers.
 pub struct CsvParserFactory;
@@ -28,22 +24,13 @@ impl Parser for CsvParser {
     where
         Self: Sized,
     {
-        let reader = BufReader::new(r);
-
-        let mut is_first_line = true;
+        let mut reader = csv::Reader::from_reader(r);
 
         let mut transactions: Vec<Transaction> = vec![];
 
-        for line in reader.lines() {
-            let line = line?;
-
-            if is_first_line {
-                Self::process_header(line)?;
-                is_first_line = false;
-            } else {
-                let transaction = Self::process_transaction(line)?;
-                transactions.push(transaction);
-            }
+        for result in reader.deserialize() {
+            let transaction: Transaction = result?;
+            transactions.push(transaction);
         }
 
         Ok(transactions)
@@ -54,74 +41,12 @@ impl Parser for CsvParser {
         writer: &mut W,
         transactions: &[Transaction],
     ) -> Result<(), ParserError> {
-        let mut buf_writer = BufWriter::new(writer);
-        let header = format!("{}\n", CSV_HEADER);
-        buf_writer.write_all(header.as_bytes())?;
+        let mut writer = csv::Writer::from_writer(writer);
         for transaction in transactions {
-            let line = Self::serialize_transaction(transaction);
-            let line = format!("{}\n", line);
-            buf_writer.write_all(line.as_bytes())?;
+            writer.serialize(transaction)?;
         }
-
-        buf_writer.flush()?;
 
         Ok(())
-    }
-}
-
-impl CsvParser {
-    fn process_header(line: String) -> Result<(), ParserError> {
-        if line != CSV_HEADER {
-            return Err(ParserError::InvalidCsvHeader(line));
-        }
-        Ok(())
-    }
-
-    fn process_transaction(line: String) -> Result<Transaction, ParserError> {
-        let parts = &line.split(',').collect::<Vec<&str>>();
-
-        if parts.len() != 8 {
-            return Err(ParserError::InvalidCsvFormat(line));
-        }
-
-        Ok(Transaction::new(
-            parts[0]
-                .parse::<u64>()
-                .map_err(|_| ParserError::InvalidCsvFormat(parts[0].to_string()))?,
-            parts[1]
-                .parse::<TransactionType>()
-                .map_err(|_| ParserError::InvalidCsvFormat(parts[1].to_string()))?,
-            parts[2]
-                .parse::<u64>()
-                .map_err(|_| ParserError::InvalidCsvFormat(parts[2].to_string()))?,
-            parts[3]
-                .parse::<u64>()
-                .map_err(|_| ParserError::InvalidCsvFormat(parts[3].to_string()))?,
-            parts[4]
-                .parse::<u64>()
-                .map_err(|_| ParserError::InvalidCsvFormat(parts[4].to_string()))?,
-            parts[5]
-                .parse::<u64>()
-                .map_err(|_| ParserError::InvalidCsvFormat(parts[5].to_string()))?,
-            parts[6]
-                .parse::<TransactionStatus>()
-                .map_err(|_| ParserError::InvalidCsvFormat(parts[6].to_string()))?,
-            parts[7].to_string(),
-        ))
-    }
-
-    fn serialize_transaction(transaction: &Transaction) -> String {
-        format!(
-            "{},{},{},{},{},{},{},{}",
-            transaction.tx_id,
-            transaction.tx_type,
-            transaction.from_user_id,
-            transaction.to_user_id,
-            transaction.amount,
-            transaction.timestamp,
-            transaction.status,
-            transaction.description
-        )
     }
 }
 
@@ -145,7 +70,7 @@ mod tests {
         assert!(
             CsvParser
                 .read_from(&mut file)
-                .is_err_and(|e| matches!(e, ParserError::InvalidCsvHeader(_)))
+                .is_err_and(|e| matches!(e, ParserError::InvalidCsvFormat(_)))
         );
     }
 

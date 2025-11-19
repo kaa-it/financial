@@ -64,4 +64,10 @@ impl From<std::io::Error> for ParserError {
     }
 }
 
+impl From<csv::Error> for ParserError {
+    fn from(e: csv::Error) -> Self {
+        Self::InvalidCsvFormat(e.to_string())
+    }
+}
+
 impl Error for ParserError {}
