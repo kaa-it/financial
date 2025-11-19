@@ -75,6 +75,10 @@ impl TxtParser {
             .map(|s| s.trim())
             .collect::<Vec<&str>>();
 
+        if parts.len() != 2 {
+            return Err(ParserError::InvalidTxtFormat(line));
+        }
+
         match parts[0] {
             "TX_ID" => {
                 transaction.tx_id = parts[1]
