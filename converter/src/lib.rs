@@ -1,14 +1,12 @@
 use parser::{Parser, ParserFactory};
+use std::io::{Read, Write};
 
-pub fn convert(
-    input: String,
-    output: String,
+pub fn convert<R: Read, W: Write>(
+    mut input: R,
+    mut output: W,
     input_parser: impl ParserFactory,
     output_parser: impl ParserFactory,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let mut input = std::fs::File::open(input)?;
-    let mut output = std::fs::File::create(output)?;
-
     let input_parser = input_parser.create_parser();
     let output_parser = output_parser.create_parser();
 

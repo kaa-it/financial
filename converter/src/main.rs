@@ -25,25 +25,16 @@ struct Args {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
 
+    let input = std::fs::File::open(args.input)?;
+    let output = std::fs::File::create(args.output)?;
+
     match (args.input_format, args.output_format) {
-        (Format::Csv, Format::Txt) => {
-            convert(args.input, args.output, CsvParserFactory, TxtParserFactory)
-        }
-        (Format::Txt, Format::Csv) => {
-            convert(args.input, args.output, TxtParserFactory, CsvParserFactory)
-        },
-        (Format::Csv, Format::Bin) => {
-            convert(args.input, args.output, CsvParserFactory, BinParserFactory)
-        },
-        (Format::Txt, Format::Bin) => {
-            convert(args.input, args.output, TxtParserFactory, BinParserFactory)
-        },
-        (Format::Bin, Format::Csv) => {
-            convert(args.input, args.output, BinParserFactory, CsvParserFactory)
-        },
-        (Format::Bin, Format::Txt) => {
-            convert(args.input, args.output, BinParserFactory, TxtParserFactory)
-        },
+        (Format::Csv, Format::Txt) => convert(input, output, CsvParserFactory, TxtParserFactory),
+        (Format::Txt, Format::Csv) => convert(input, output, TxtParserFactory, CsvParserFactory),
+        (Format::Csv, Format::Bin) => convert(input, output, CsvParserFactory, BinParserFactory),
+        (Format::Txt, Format::Bin) => convert(input, output, TxtParserFactory, BinParserFactory),
+        (Format::Bin, Format::Csv) => convert(input, output, BinParserFactory, CsvParserFactory),
+        (Format::Bin, Format::Txt) => convert(input, output, BinParserFactory, TxtParserFactory),
         _ => {
             println!("Conversion is not needed. Format is the same.");
             return Ok(());

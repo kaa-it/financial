@@ -13,13 +13,16 @@ use std::fmt::Display;
 use std::str::FromStr;
 
 /// The `TransactionStatus` enum represents the status of a financial transaction.
-#[derive(PartialEq, Eq, Copy, Clone)]
+#[derive(PartialEq, Eq, Copy, Clone, serde::Serialize, serde::Deserialize, Debug)]
 pub enum TransactionStatus {
     /// A successful transaction.
+    #[serde(rename = "SUCCESS")]
     Success,
     /// A failed transaction.
+    #[serde(rename = "FAILURE")]
     Failure,
     /// A pending transaction.
+    #[serde(rename = "PENDING")]
     Pending,
 }
 
