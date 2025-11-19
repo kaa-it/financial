@@ -48,9 +48,9 @@ impl Parser for BinParser {
                 return Err(InvalidBinFormat("Wrong MAGIC sequence".to_string()));
             }
 
-            let _ = r.read_u32::<BigEndian>()?;
+            let record_size = r.read_u32::<BigEndian>()?;
 
-            let transaction = BinParser::process_transaction(r)?;
+            let transaction = BinParser::process_transaction(r, record_size)?;
 
             transactions.push(transaction);
         }
@@ -72,7 +72,10 @@ impl Parser for BinParser {
 }
 
 impl BinParser {
-    fn process_transaction<R: Read>(r: &mut R) -> Result<Transaction, ParserError> {
+    fn process_transaction<R: Read>(
+        r: &mut R,
+        record_size: u32,
+    ) -> Result<Transaction, ParserError> {
         let mut transaction = Transaction::default();
 
         transaction.tx_id = r.read_u64::<BigEndian>()?;
@@ -85,6 +88,11 @@ impl BinParser {
         transaction.status = TransactionStatus::from_repr((r.read_u8()?) as usize)
             .ok_or(InvalidBinFormat("Wrong transaction status".to_string()))?;
         let description_length = r.read_u32::<BigEndian>()?;
+
+        if description_length != record_size - 46 {
+            return Err(InvalidBinFormat("Wrong description length".to_string()));
+        }
+
         let mut description = vec![0x00; description_length as usize];
         r.read_exact(&mut description)?;
         let description = String::from_utf8(description)
